@@ -88,7 +88,7 @@ export default function App() {
                     activeTintColor: "black",
                     inactiveTintColor: "white",
                     style: {
-                      backgroundColor: "#F1485C"
+                      backgroundColor: "#0066CC"
                     }
                   }}
                 >
@@ -108,7 +108,7 @@ export default function App() {
                           options={{
                             title: "List",
                             tabBarLabel: "Home",
-                            headerStyle: { backgroundColor: "#F1485C" },
+                            headerStyle: { backgroundColor: "#0066CC" },
                             headerTitleStyle: { color: "white" },
                             headerTitleAlign: "center"
                           }}
@@ -128,7 +128,7 @@ export default function App() {
                               />
                             ),
                             title: "Room",
-                            headerStyle: { backgroundColor: "#F1485C" },
+                            headerStyle: { backgroundColor: "#0066CC" },
                             headerTitleStyle: { color: "white" },
                             headerTitleAlign: "center"
                           }}
@@ -153,7 +153,7 @@ export default function App() {
                           name="Around Me"
                           options={{
                             title: "Around Me",
-                            headerStyle: { backgroundColor: "#F1485C" },
+                            headerStyle: { backgroundColor: "#0066CC" },
                             headerTitleStyle: { color: "white" },
                             headerTitleAlign: "center"
                           }}
@@ -182,7 +182,7 @@ export default function App() {
                           name="Profile"
                           options={{
                             title: "Profile",
-                            headerStyle: { backgroundColor: "#F1485C" },
+                            headerStyle: { backgroundColor: "#0066CC" },
                             headerTitleStyle: { color: "white" },
                             headerTitleAlign: "center"
                           }}

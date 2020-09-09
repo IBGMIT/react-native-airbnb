@@ -25,7 +25,7 @@ export default function SingUpScreen({ setToken, setId }) {
   const handleSubmit = async () => {
     try {
       if (password !== confirmPassword) {
-        alert("Les mots de passe ne sont pas identiques");
+        alert("Passordene stemmer ikke overens");
       } else {
         const response = await axios.post(
           "https://express-airbnb-api.herokuapp.com/user/sign_up",
@@ -47,7 +47,7 @@ export default function SingUpScreen({ setToken, setId }) {
       <KeyboardAwareScrollView extraScrollHeight={110}>
         <SafeAreaView>
           <View style={styles.inner}>
-            <Text style={styles.title}>Rejoignez-nous !</Text>
+            <Text style={styles.title}>Bli med på laget!</Text>
             <TextInput
               autoCapitalize="none"
               style={styles.textInput}
@@ -93,7 +93,7 @@ export default function SingUpScreen({ setToken, setId }) {
               onChangeText={text => setConfirmPassword(text)}
             />
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}> S'inscrire</Text>
+              <Text style={styles.buttonText}> Registrer</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -101,7 +101,7 @@ export default function SingUpScreen({ setToken, setId }) {
               }}
             >
               <Text style={styles.underButton}>
-                Déjà un compte ? Se connecter
+                Har du allerede en konto? Logg inn
               </Text>
             </TouchableOpacity>
           </View>
@@ -114,7 +114,7 @@ export default function SingUpScreen({ setToken, setId }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F35960",
+    backgroundColor: "#0066CC",
     alignItems: "center",
     justifyContent: "center"
   },
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     marginTop: 50
   },
   buttonText: {
-    color: "#F35960",
+    color: "#0066CC",
     fontSize: 24
   },
   underButton: {

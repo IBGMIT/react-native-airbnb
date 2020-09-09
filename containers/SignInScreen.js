@@ -26,7 +26,7 @@ export default function SignInScreen({ setToken, setId }) {
         setToken(response.data.token);
         setId(response.data.id);
       } else {
-        alert("Une erreur est survenue, veuillez ressayer");
+        alert("En feil har oppstått. Vennligst prøv igjen");
       }
     } catch (error) {
       alert(error.message);
@@ -39,7 +39,7 @@ export default function SignInScreen({ setToken, setId }) {
       contentContainerStyle={styles.container}
     >
       <SafeAreaView style={{ alignItems: "center" }}>
-        <MaterialCommunityIcons name="home-outline" size={150} color="white" />
+        <MaterialCommunityIcons name="sailing" size={150} color="white" />
         <View style={styles.form}>
           <TextInput
             autoCapitalize="none"
@@ -59,14 +59,14 @@ export default function SignInScreen({ setToken, setId }) {
             value={password}
           />
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}> Se connecter</Text>
+            <Text style={styles.buttonText}> Logg inn</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("SignUp");
             }}
           >
-            <Text style={styles.underButton}>Pas de compte ? S'inscrire</Text>
+            <Text style={styles.underButton}>Ingen konto? Registrer deg</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -77,7 +77,7 @@ export default function SignInScreen({ setToken, setId }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F35960",
+    backgroundColor: "#0066CC",
     alignItems: "center",
     justifyContent: "center"
   },
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     marginTop: 50
   },
   buttonText: {
-    color: "#F35960",
+    color: "#0066CC",
     fontSize: 24
   },
   underButton: {

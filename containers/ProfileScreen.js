@@ -67,11 +67,11 @@ export default function ProfileScreen({ setToken, setId }) {
           uploadResult.photo.length > 0
         ) {
           setImage(uploadResult.photo[0].url);
-          alert("Photo mise à jour !");
+          alert("Foto oppdatert!");
         }
       }
     } catch (e) {
-      alert("Une erreur est survenue");
+      alert("Det oppstod et problem, vennligst prøv igjen.");
     } finally {
       setPreview(false);
       setIsUploading(false);
@@ -101,10 +101,10 @@ export default function ProfileScreen({ setToken, setId }) {
       );
 
       setData(response.data);
-      alert("Profil mis à jour !");
+      alert("Profilen er oppdatert");
     } catch (error) {
       console.log("userUpdateError  ", error.message);
-      alert("Une erreur est survenue");
+      alert("Et problem har oppstått. ");
     }
   };
 
@@ -241,7 +241,7 @@ export default function ProfileScreen({ setToken, setId }) {
         style={styles.updateButton}
         onPress={handleUserUpdate}
       >
-        <Text style={styles.updateButtonText}>Mettre à jour</Text>
+        <Text style={styles.updateButtonText}>Oppdater min profil</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
@@ -250,7 +250,7 @@ export default function ProfileScreen({ setToken, setId }) {
         }}
         style={styles.logoutButton}
       >
-        <Text style={styles.logoutButtonText}>Se déconnecter</Text>
+        <Text style={styles.logoutButtonText}>Logg ut</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     borderWidth: 1,
-    borderColor: "#F35960",
+    borderColor: "#0066CC",
     width: "80%",
     height: 80,
     paddingHorizontal: 15,
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     height: 55,
     borderRadius: 50,
     borderWidth: 1,
-    borderColor: "#F35960",
+    borderColor: "#0066CC",
     backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 55,
     borderRadius: 50,
-    backgroundColor: "#F35960",
+    backgroundColor: "#0066CC",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 30
@@ -314,6 +314,6 @@ const styles = StyleSheet.create({
     color: "white"
   },
   updateButtonText: {
-    color: "#F35960"
+    color: "#0066CC"
   }
 });
