@@ -1,169 +1,96 @@
-import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/core";
-import {
-  Text,
-  TextInput,
+import * as React from 'react';
+import {Button,Text,
   View,
-  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
   StyleSheet,
-  Platform,
-  SafeAreaView
-} from "react-native";
-import axios from "axios";
-import { ScrollView } from "react-native-gesture-handler";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
-export default function SingUpScreen({ setToken, setId }) {
-  const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleSubmit = async () => {
-    try {
-      if (password !== confirmPassword) {
-        alert("Passordene stemmer ikke overens");
-      } else {
-        const response = await axios.post(
-          "https://express-airbnb-api.herokuapp.com/user/sign_up",
-          { email, name, username, description, password }
-        );
-        console.log(response.data);
-
-        if (response.data.token) {
-          setToken(response.data.token);
-          setId(response.data.id);
-        }
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-  return (
-    <ScrollView bounces={false} contentContainerStyle={styles.container}>
-      <KeyboardAwareScrollView extraScrollHeight={110}>
-        <SafeAreaView>
-          <View style={styles.inner}>
-            <Text style={styles.title}>Bli med på laget!</Text>
-            <TextInput
-              autoCapitalize="none"
-              style={styles.textInput}
-              placeholder="email"
-              placeholderTextColor="#E1E1E1"
-              onChangeText={text => setEmail(text)}
-            />
-            <TextInput
-              style={styles.textInput}
-              placeholder="username"
-              placeholderTextColor="#E1E1E1"
-              onChangeText={text => setUsername(text)}
-            />
-            <TextInput
-              style={styles.textInput}
-              placeholder="name"
-              placeholderTextColor="#E1E1E1"
-              onChangeText={text => setName(text)}
-            />
-            <TextInput
-              multiline={true}
-              numberOfLines={8}
-              maxLength={200}
-              style={styles.textArea}
-              placeholder="description (max. 200 characters"
-              placeholderTextColor="#E1E1E1"
-              onChangeText={text => setDescription(text)}
-            />
-            <TextInput
-              autoCapitalize="none"
-              style={styles.textInput}
-              placeholder="password"
-              placeholderTextColor="#E1E1E1"
-              secureTextEntry={true}
-              onChangeText={text => setPassword(text)}
-            />
-            <TextInput
-              autoCapitalize="none"
-              style={styles.textInput}
-              placeholder="confirm password"
-              placeholderTextColor="#E1E1E1"
-              secureTextEntry={true}
-              onChangeText={text => setConfirmPassword(text)}
-            />
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttonText}> Registrer</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("SignIn");
-              }}
-            >
-              <Text style={styles.underButton}>
-                Har du allerede en konto? Logg inn
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </KeyboardAwareScrollView>
-    </ScrollView>
-  );
-}
+  Alert,
+} from 'react-native';
+import firebase from 'firebase';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0066CC",
-    alignItems: "center",
-    justifyContent: "center"
+  error: {
+    color: 'red',
   },
-  inner: {
-    padding: 24,
-    flex: 1,
-    alignItems: "center"
-  },
-  title: {
-    fontSize: 24,
-    color: "white",
-    marginVertical: 20
-  },
-  button: {
-    width: 190,
-    height: 65,
-    borderRadius: 50,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 50
-  },
-  buttonText: {
-    color: "#0066CC",
-    fontSize: 24
-  },
-  underButton: {
-    marginTop: 15,
-    color: "white",
-    textDecorationLine: "underline"
-  },
-  textInput: {
-    borderBottomColor: "white",
-    borderBottomWidth: 1,
-    width: 330,
-    height: 45,
-    marginBottom: 30,
-    paddingLeft: 15,
-    color: "white"
-  },
-  textArea: {
-    width: 330,
-    height: 80,
-    borderColor: "white",
+  inputField: {
     borderWidth: 1,
-    paddingHorizontal: 15,
-    paddingTop: 15,
-    textAlignVertical: "top",
-    color: "white",
-    marginBottom: 20
-  }
+    margin: 10,
+    padding: 10,
+  },
+  header: {
+    fontSize: 40,
+  },
 });
+
+export default class SignUpForm extends React.Component {
+  state = {
+    email: '',
+    password: '',
+    isLoading: false,
+    isCompleted: false,
+    errorMessage: null,
+  };
+
+  startLoading = () => this.setState({ isLoading: true });
+  endLoading = () => this.setState({ isLoading: false });
+  setError = errorMessage => this.setState({ errorMessage });
+  clearError = () => this.setState({ errorMessage: null });
+
+  handleChangeEmail = email => this.setState({ email });
+  handleChangePassword = password => this.setState({ password });
+
+  handleSubmit = async () => {
+    const { email, password } = this.state;
+    try {
+      this.startLoading();
+      this.clearError();
+      const result = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password);
+      console.log(result);
+      this.endLoading();
+      this.setState({ isCompleted: true });
+    } catch (error) {
+      // Vi sender `message` feltet fra den error der modtages, videre.
+      this.setError(error.message);
+      this.endLoading();
+    }
+  };
+
+  render = () => {
+    const { errorMessage, email, password, isCompleted } = this.state;
+    if (isCompleted) {
+      return <Text>You are now signed up</Text>;
+    }
+    return (
+        <View>
+          <Text style={styles.header}>Sign up</Text>
+          <TextInput
+              placeholder="email"
+              value={email}
+              onChangeText={this.handleChangeEmail}
+              style={styles.inputField}
+          />
+          <TextInput
+              placeholder="password"
+              value={password}
+              onChangeText={this.handleChangePassword}
+              secureTextEntry
+              style={styles.inputField}
+          />
+          {errorMessage && (
+              <Text style={styles.error}>Error: {errorMessage}</Text>
+          )}
+          {this.renderButton()}
+        </View>
+    );
+  };
+
+  renderButton = () => {
+    const { isLoading } = this.state;
+    if (isLoading) {
+      return <ActivityIndicator />;
+    }
+    return <Button onPress={this.handleSubmit} title="Create user" />;
+  };
+}

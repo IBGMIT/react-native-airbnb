@@ -1,115 +1,95 @@
-import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/core";
+import * as React from 'react';
 import {
+  Button,
   Text,
-  TextInput,
   View,
-  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
   StyleSheet,
-  SafeAreaView
-} from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import axios from "axios";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
-export default function SignInScreen({ setToken, setId }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSubmit = async () => {
-    try {
-      const response = await axios.post(
-        "https://express-airbnb-api.herokuapp.com/user/log_in",
-        { email: email, password: password }
-      );
-      if (response.data.token) {
-        setToken(response.data.token);
-        setId(response.data.id);
-      } else {
-        alert("En feil har oppstått. Vennligst prøv igjen");
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-  const navigation = useNavigation();
-  return (
-    <KeyboardAwareScrollView
-      extraScrollHeight={110}
-      contentContainerStyle={styles.container}
-    >
-      <SafeAreaView style={{ alignItems: "center" }}>
-        <MaterialCommunityIcons name="sailing" size={150} color="white" />
-        <View style={styles.form}>
-          <TextInput
-            autoCapitalize="none"
-            style={styles.textInput}
-            placeholder="email"
-            placeholderTextColor="#E1E1E1"
-            onChangeText={text => setEmail(text)}
-            value={email}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="password"
-            placeholderTextColor="#E1E1E1"
-            secureTextEntry={true}
-            autoCapitalize="none"
-            onChangeText={text => setPassword(text)}
-            value={password}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}> Logg inn</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("SignUp");
-            }}
-          >
-            <Text style={styles.underButton}>Ingen konto? Registrer deg</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </KeyboardAwareScrollView>
-  );
-}
+  Alert,
+} from 'react-native';
+import firebase from 'firebase';
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0066CC",
-    alignItems: "center",
-    justifyContent: "center"
+  error: {
+    color: 'red',
   },
-  button: {
-    width: 190,
-    height: 65,
-    borderRadius: 50,
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 50
+  inputField: {
+    borderWidth: 1,
+    margin: 10,
+    padding: 10,
   },
-  buttonText: {
-    color: "#0066CC",
-    fontSize: 24
+  header: {
+    fontSize: 40,
   },
-  underButton: {
-    marginTop: 15,
-    color: "white",
-    textDecorationLine: "underline"
-  },
-  textInput: {
-    borderBottomColor: "white",
-    borderBottomWidth: 1,
-    width: 330,
-    height: 45,
-    marginBottom: 30,
-    color: "white"
-  },
-  form: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 50
-  }
 });
+
+export default class SignUpForm extends React.Component {
+  state = {
+    email: '',
+    password: '',
+    isLoading: false,
+    isCompleted: false,
+    errorMessage: null,
+  };
+
+  startLoading = () => this.setState({ isLoading: true });
+  endLoading = () => this.setState({ isLoading: false });
+  setError = errorMessage => this.setState({ errorMessage });
+  clearError = () => this.setState({ errorMessage: null });
+
+  handleChangeEmail = email => this.setState({ email });
+  handleChangePassword = password => this.setState({ password });
+
+  handleSubmit = async () => {
+    const { email, password } = this.state;
+    try {
+      this.startLoading();
+      this.clearError();
+      const result = await firebase.auth().signInWithEmailAndPassword(email, password);
+      console.log(result);
+      this.endLoading();
+      this.setState({ isCompleted: true });
+    } catch (error) {
+      this.setError(error.message);
+      this.endLoading();
+    }
+  };
+
+  render = () => {
+    const { errorMessage, email, password, isCompleted } = this.state;
+    if (isCompleted) {
+      return <Text>You are now logged in</Text>;
+    }
+    return (
+        <View>
+          <Text style={styles.header}>Login up</Text>
+          <TextInput
+              placeholder="email"
+              value={email}
+              onChangeText={this.handleChangeEmail}
+              style={styles.inputField}
+          />
+          <TextInput
+              placeholder="password"
+              value={password}
+              onChangeText={this.handleChangePassword}
+              secureTextEntry
+              style={styles.inputField}
+          />
+          {errorMessage && (
+              <Text style={styles.error}>Error: {errorMessage}</Text>
+          )}
+          {this.renderButton()}
+        </View>
+    );
+  };
+
+  renderButton = () => {
+    const { isLoading } = this.state;
+    if (isLoading) {
+      return <ActivityIndicator />;
+    }
+    return <Button onPress={this.handleSubmit} title="Login" />;
+  };
+}

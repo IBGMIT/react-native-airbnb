@@ -9,37 +9,37 @@ const RoomCard = ({ data, border }) => {
     return <Image style={styles.img} source={{ uri: item }} />;
   };
   return (
-    <View style={[styles.container, { borderBottomWidth: border ? 1 : 0 }]}>
-      {/* <ImageBackground style={styles.img} source={{ uri: data.photos[0] }}>
+      <View style={[styles.container, { borderBottomWidth: border ? 1 : 0 }]}>
+        {/* <ImageBackground style={styles.img} source={{ uri: data.photos[0] }}>
         <View style={styles.priceView}>
           <Text style={styles.price}>{data.price} €</Text>
         </View>
       </ImageBackground> */}
-      <Carousel
-        ref={c => {
-          _carousel = c;
-        }}
-        data={data.photos}
-        renderItem={_renderItem}
-        sliderWidth={370}
-        itemWidth={370}
-        loop={true}
-      />
-
-      <View style={styles.titleAndProfileImg}>
-        <View>
-          <Text style={styles.title}>{data.title}</Text>
-          <View style={styles.starsAndReviews}>
-            <Stars rating={data.ratingValue} />
-            <Text style={styles.reviews}>{data.reviews} avis</Text>
-          </View>
-        </View>
-        <Image
-          style={styles.profileImg}
-          source={{ uri: data.user.account.photos[0] }}
+        <Carousel
+            ref={c => {
+              _carousel = c;
+            }}
+            data={data.photos}
+            renderItem={renderItem}
+            sliderWidth={370}
+            itemWidth={370}
+            loop={true}
         />
+
+        <View style={styles.titleAndProfileImg}>
+          <View>
+            <Text style={styles.title}>{data.title}</Text>
+            <View style={styles.starsAndReviews}>
+              <Stars rating={data.ratingValue} />
+              <Text style={styles.reviews}>{data.reviews} avis</Text>
+            </View>
+          </View>
+          <Image
+              style={styles.profileImg}
+              source={{ uri: data.user.account.photos[0] }}
+          />
+        </View>
       </View>
-    </View>
   );
 };
 
